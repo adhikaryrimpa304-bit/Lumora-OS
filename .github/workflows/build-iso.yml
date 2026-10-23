@@ -21,15 +21,20 @@ jobs:
           apt-get update
           apt-get install -y ca-certificates git sudo live-build debootstrap squashfs-tools xorriso debian-archive-keyring
 
+      
       - name: Build ISO
         working-directory: lumora
+        env:
+          WORK: ${{ github.workspace }}/lumora-iso-output
         run: |
-          chmod +x linux/build-iso.sh
           bash linux/build-iso.sh
+      - name: Verify ISO output
+        run: |
+          find "$GITHUB_WORKSPACE/lumora-iso-output" -maxdepth 2 -type f -name '*.iso' -ls
 
       - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
           name: lumora-iso
-          path: lumora/build/*.iso
+          path: lumora-iso-output/*.iso
           if-no-files-found: error
