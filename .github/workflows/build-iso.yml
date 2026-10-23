@@ -1,8 +1,11 @@
 name: Build Lumora ISO
+
 on:
   workflow_dispatch:
   push:
-    tags: ['v*']
+    branches:
+      - main
+
 jobs:
   iso:
     runs-on: ubuntu-latest
@@ -10,13 +13,22 @@ jobs:
       image: debian:trixie
       options: --privileged
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Prepare container
-        run: apt-get update && apt-get install -y ca-certificates git
-      - uses: actions/checkout@v4
+        run: |
+          apt-get update
+          apt-get install -y ca-certificates git sudo live-build debootstrap squashfs-tools xorriso debian-archive-keyring
+
       - name: Build ISO
-        run: WORK=/build bash linux/build-iso.sh
-      - uses: actions/upload-artifact@v4
+        run: |
+          chmod +x linux/build-iso.sh
+          bash linux/build-iso.sh
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
         with:
           name: lumora-iso
-          path: /build/*.iso
+          path: build/*.iso
           if-no-files-found: error
