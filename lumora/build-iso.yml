@@ -1,0 +1,22 @@
+name: Build Lumora ISO
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  iso:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:trixie
+      options: --privileged
+    steps:
+      - name: Prepare container
+        run: apt-get update && apt-get install -y ca-certificates git
+      - uses: actions/checkout@v4
+      - name: Build ISO
+        run: WORK=/build bash linux/build-iso.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lumora-iso
+          path: /build/*.iso
+          if-no-files-found: error
