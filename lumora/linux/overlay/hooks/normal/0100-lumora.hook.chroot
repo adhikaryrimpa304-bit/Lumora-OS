@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+dconf update
+sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Lumora OS"/' /etc/os-release
+echo "Lumora OS \n \l" > /etc/issue

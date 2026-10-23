@@ -1,0 +1,7 @@
+{
+  "uuid": "lumora-clock@lumora",
+  "name": "Lumora Clock",
+  "description": "Desktop clock in electric purple and neon cyan. Follows the system 12h/24h setting.",
+  "shell-version": ["47", "48", "49"],
+  "version": 1
+}
